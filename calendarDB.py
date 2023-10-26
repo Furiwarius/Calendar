@@ -1,4 +1,6 @@
 import sqlalchemy as sqla
+import psycopg2
+
 
 
 class calendarDatabase():
@@ -7,7 +9,7 @@ class calendarDatabase():
         # при создании экземпляра класса связывается с бд календаря
         # если не находит, то создает пустую бд с таблицами
 
-        self.engine = sqla.create_engine('sqlite:///calendarDB.db')
+        self.engine = sqla.create_engine("postgresql+psycopg2://root:pass@localhost/mydb")
         self.conn = self.engine.connect()
         self.metadata = sqla.MetaData()
         self.createDataBase()
@@ -32,13 +34,12 @@ class calendarDatabase():
         self.metadata.create_all(self.engine)
 
 
+
     def makeEntry(self, new_number:int, new_week:int, new_month:int, new_year:int, new_record:str):
         # внесение записи
-        ins_date = self.makeDate(new_number, new_week, new_month, new_year)
-        ins_recorrd = self.makeRecord(new_record)
-        self.conn = self.engine.connect()
-        self.conn.execute(ins_date)
-        self.conn.execute(ins_recorrd)
+        self.makeDate(new_number, new_week, new_month, new_year)
+        self.makeRecord(new_record)
+
     
 
     def makeDate(self, new_number:int, new_week:int, new_month:int, new_year:int):
@@ -47,20 +48,31 @@ class calendarDatabase():
         day_week = new_week,
         month = new_month,
         year = new_year)
-        return ins
+
+        self.conn = self.engine.connect()
+        self.conn.execute(ins)
 
 
     def makeRecord(self, new_record:str):
         ins = self.record.insert().values(content = new_record) 
-        return ins
+        self.conn = self.engine.connect()
+        self.conn.execute(ins)
     
     def findEntry(self):
         # найти запись
         pass
 
 
-a = calendarDatabase()
-record = "Сегодня я начал работать над дз"
-a.makeEntry(24, 2, 10, 2023, record)
+import psycopg2
+
+con = psycopg2.connect(
+  database="postgres", 
+  user="postgres", 
+  password="", 
+  host="127.0.0.1", 
+  port="5432"
+)
+
+print("Database opened successfully")
 
 
