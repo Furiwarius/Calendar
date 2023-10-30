@@ -208,7 +208,4 @@ class CalendarDatabase():
             self.record.c.id == record_id)
         execution_request = self.conn.execute(request)
         self.log.info(f"Изменения успешно внесены")
-    
 
-db = CalendarDatabase()
-db.makeEntry(datetime.now(), 'Пробная запись')
