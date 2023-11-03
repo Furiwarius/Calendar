@@ -1,6 +1,6 @@
 import sqlalchemy as sqla
 from datetime import datetime
-from loggingDB import LoggingDatabase
+from loggingModule import Logging
 
 
 class CalendarDatabase():
@@ -11,7 +11,7 @@ class CalendarDatabase():
     
     def __init__(self) -> None:
 
-        self.log = LoggingDatabase().logger
+        self.log = Logging(__file__).logger
 
         self.engine = sqla.create_engine('sqlite:///data/calendarDB.db')
         self.conn = self.engine.connect()
