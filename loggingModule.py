@@ -42,5 +42,5 @@ class Logging():
         Возвращает: имя файла (str) без пути и без указания расширений'''
         
         name = os.path.basename(path)
-        return = name.replace(".py", "")
+        return name.replace(".py", "")
         
