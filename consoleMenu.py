@@ -1,5 +1,6 @@
 from colorama import init
 from colorama import Fore, Back, Style
+from loggingModule import Logging
 import keyboard
 import os
 
@@ -63,6 +64,8 @@ class ConsoleMenu():
     def __init__(self, name="Menu") -> None:
         '''Метод инициализации'''
 
+        self.log = Logging(__file__).getLogger()
+
         self.menu_name = name
         # Список полей (кнопок)
         self.field_list = []
@@ -75,6 +78,8 @@ class ConsoleMenu():
         # обработки и изображения полей меню
         self.click_processing = True
 
+        self.log.info(f"Создание эземпляра класса ConsoleMenu")
+
 
     def addField(self, name_field:str) -> MenuField:
         '''Метод создающий новое поле меню
@@ -82,11 +87,14 @@ class ConsoleMenu():
         Входящие данные: имя поля (str)
         Возвращает: экземпляр класса MenuField с полученным именем'''
         
-        new_field = MenuField(new_field)
+        new_field = MenuField(name_field)
         if len(self.field_list)==0:
             new_field.colorChange()
             self.target_field = new_field
         self.field_list.append(new_field)
+        
+        self.log.info(f"Создан экземпляр класса MenuField с именем {name_field}")
+
         return new_field
 
 
@@ -113,6 +121,7 @@ class ConsoleMenu():
         Входящиее данные: Функция (funcion), которая будет вызываться
         при нажатии клавиши Esc
         Возвращает: None'''
+        self.log.debug(f"Клавище Esc присвоена функция {func}")
         self.esc_func = func
 
 
@@ -121,6 +130,7 @@ class ConsoleMenu():
 
         Входящиее данные: None
         Возвращает: None'''
+        self.log.debug(f"Вызвана функция присвоенная клавище Esc")
         self.esc_func()
 
 
@@ -130,6 +140,8 @@ class ConsoleMenu():
 
         Входящиее данные: None
         Возвращает: None'''
+
+        self.log.debug(f"Запущена функция на поле {self.target_field.name}")
         self.target_field.performFunction()
 
 
@@ -138,8 +150,9 @@ class ConsoleMenu():
 
         Входящиее данные: None
         Возвращает: None'''
-        
-        print(self.name)
+
+        self.log.debug(f"Запущен вывод меню в консоль")
+        print(self.menu_name)
         for field in self.field_list:
             print(field.name)
     
@@ -149,7 +162,7 @@ class ConsoleMenu():
 
         Входящиее данные: None
         Возвращает: None'''
-        
+        self.log.debug(f"Запущена очистка консоли")
         os.system(['clear','cls'][os.name == 'nt'])
         
         
@@ -160,7 +173,7 @@ class ConsoleMenu():
         заменяя значение переменной в таргете (MenuField)
         Входящиее данные: None
         Возвращает: None'''
-
+        self.log.debug(f"Запущена функция moveCursorUP")
         number = self.removeCursor()
         if number-1 < len(self.field_list)*(-1):
             self.changeCursor(0)
@@ -175,7 +188,7 @@ class ConsoleMenu():
         заменяя значение переменной в таргете (MenuField)
         Входящиее данные: None
         Возвращает: None'''
-        #ПРОПИСАТЬ ВЫХОД ИЗ ПРОЦЕССА!!!
+        self.log.debug(f"Запущена функция moveCursorDown")
         number = self.removeCursor()
         if number+1 > len(self.field_list):
             self.changeCursor(0)
@@ -190,8 +203,10 @@ class ConsoleMenu():
         Входящиее данные: None
         Возвращает: индекс поля, который сейчас находится в таргете'''
         
+        self.log.debug(f"Запущена функция remobeCursor")
         self.target_field.colorChange()
         index = self.field_list.index(self.target_field)
+        self.log.debug(f"Функция removeCursor возвращает индекс поля, находящегося в таргете: {index}")
         return index
 
 
@@ -202,7 +217,8 @@ class ConsoleMenu():
         экземпляр класса MenuField из списка field_list с заданным индексом.
         Входящиее данные: индекс нового таргета (int)
         Возвращает: None'''
-        
+        self.log.debug(f"Запущена функция changeCursor (смена таргета) c новым индеком {index}")
+        self.log.debug(f"Таргет перешел от поля {self.target_field.name} на поле {self.field_list[index].name}")
         self.target_field = self.field_list[index]
         self.target_field.colorChange()
 
@@ -213,9 +229,11 @@ class ConsoleMenu():
 
         Входящиее данные: None
         Возвращает: None'''
-        
+        self.log.info(f"Запущена функция processStarting запускающая процесс отображения полей меню и считывания нажатых клавиш")
         self.click_processing = True
         while self.click_processing:
             self.cleaning()
             self.outputOnDisplay()
             self.keyProcessing()
+        self.log.info(f"Функция processStarting прекратила работу")
+
