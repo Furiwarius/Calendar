@@ -11,7 +11,7 @@ class CalendarDatabase():
     
     def __init__(self) -> None:
 
-        self.log = Logging(__file__).logger
+        self.log = Logging(__file__).getLogger()
 
         self.engine = sqla.create_engine('sqlite:///data/calendarDB.db')
         self.conn = self.engine.connect()
