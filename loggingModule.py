@@ -33,6 +33,13 @@ class Logging():
         self.logger.addHandler(self.handler)
 
         self.logger.info(f"Начало работы модуля логгирования {__name__}...")
+    
+    def getLogger(self):
+        '''Получить логгер
+
+        Входящие данные: None
+        Возвращает: Логгер(Logger) для записи в журнал'''
+        return self.logger
 
 
     def nameExtraction(self, path:str) -> str:
