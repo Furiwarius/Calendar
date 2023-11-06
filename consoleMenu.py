@@ -105,12 +105,15 @@ class ConsoleMenu():
         вызывает функцию перемещения или обработку нажатия клавиши.
         Входящиее данные: None
         Возвращает: None'''
-        #\x1b[A - up
-        #\x1b[B - down
-        keyboard.add_hotkey("\x1b[A", self.moveCursor())
-        keyboard.add_hotkey("\x1b[B", self.moveCursor(mode=1))
-        keyboard.add_hotkey("enter", self.moveEnter())
-        keyboard.add_hotkey("esc", self.moveEsc())
+        
+        key_input = keyboard.record("enter")
+        if len(key_input)>1:
+            last_input = key_input[-2].name
+            if last_input=='up':self.moveCursor(mode=1)
+            elif last_input=='down':self.moveCursor()
+            elif last_input=='esc':self.moveEsc()
+        else:
+            self.moveEnter()
 
 
     def settingEsc(self, func) -> None:
@@ -167,10 +170,11 @@ class ConsoleMenu():
         
         
     def moveCursor(self, mode = -1) -> None:
-        '''Переместить курсор вверх
+        '''Переместить курсор
 
-        Метод перемещает курсор >вверх<, то есть назад по списку,
-        заменяя значение переменной в таргете (MenuField)
+        Метод перемещает курсор "вверх" или "вниз", то есть назад или вперед по списку
+        в зависимости от знака mode (1 - спускаемся, -1 - поднимаемся), заменяя значение 
+        переменной в таргете (MenuField)
         Входящиее данные: None
         Возвращает: None'''
         self.log.debug(f"Запущена функция moveCursorUP")
