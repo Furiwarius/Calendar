@@ -20,21 +20,57 @@ class MenuField():
         self.name = name
         
         # Текущий цвет фона для данного поля меню
-        self.back_color = Back.RESET
+        self.back_color = self.setBackColor()
         # Цвет поля при для смены цвета фона
-        self.colorСhoice = Back.GREEN
+        self.colorСhoice = self.setColorChoise()
 
         self.push_func = None
    
+
+    def setBackColor(self, new_color = Back.RESET) -> None:
+        '''Метод настройки основного цвета поля меню
+        
+        Этот цвет поля используется, если поле не находится в таргете меню
+        Входящие данные: цвет фона (Back. ....)'''
+        self.back_color = new_color
+    
+
+    def setColorChoise(self, new_color = Back.GREEN) -> None:
+        '''Метод настройки второстепенного цвета поля меню
+        
+        Этот цвет поля используется, если поле находится в таргете меню
+        Входящие данные: цвет фона (Back. ....)'''
+        self.colorChoice = new_color
+
+    
+    def getBackColor(self) -> None:
+        '''Получить основной цвет фона поля меню
+        
+        Входящие данные: None
+        Возвращаемое значение: цвет фона (Back. ....)'''
+        return self.back_color
+
+
+    def getColorChoise(self) -> None:
+        '''Получить второстепенный цвет фона поля меню
+        
+        Входящие данные: None
+        Возвращаемое значение: цвет фона (Back. ....)'''
+        return self.colorChoice
+
     
     def colorChange(self) -> None:
         '''Метод меняющий цвет поля меню
 
+        Меняет обычный цвет поля на цвет, при котором 
+        поле находится в таргете и наоборот
         Входящие данные: None'''
-        self.colorChoice, self.back_color = self.back_color, self.colorChoice
+        change = self.getBackColor()
+        self.setBackColor(self.getColorChoise())
+        self.setColorChoise(change)
 
 
-    def backgroundColorSetting(self, new_color):
+    def backgroundColorSetting(self, new_color) -> None:
         '''Метод для настройки цвета фона
 
         Входящие данные: новый цвет фона'''
