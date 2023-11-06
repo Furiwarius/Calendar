@@ -157,7 +157,7 @@ class ConsoleMenu():
         self.log.debug(f"Запущен вывод меню в консоль")
         print(self.menu_name)
         for field in self.field_list:
-            print(field.name)
+            print(field.back_color + field.name)
     
 
     def cleaning(self) -> None:
