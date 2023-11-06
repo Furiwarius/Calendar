@@ -31,7 +31,7 @@ class MenuField():
         '''Метод меняющий цвет поля меню
 
         Входящие данные: None'''
-        self.back_color, self.colorChoice = self.colorChoice, self.back_color
+        self.colorChoice, self.back_color = self.back_color, self.colorChoice
 
 
     def backgroundColorSetting(self, new_color):
@@ -42,7 +42,7 @@ class MenuField():
         self.colorСhoice = new_color
 
     
-    def settingFuncion(self, func:function) -> None:
+    def settingFuncion(self, func) -> None:
         '''Привязка функции к полю меню
 
         Входящие данные: функция, которая будет исполняться при нажатии на поле меню'''
@@ -107,8 +107,8 @@ class ConsoleMenu():
         Возвращает: None'''
         #\x1b[A - up
         #\x1b[B - down
-        keyboard.add_hotkey("\x1b[A", self.moveCursorUP())
-        keyboard.add_hotkey("\x1b[B", self.moveCursorDown())
+        keyboard.add_hotkey("\x1b[A", self.moveCursor())
+        keyboard.add_hotkey("\x1b[B", self.moveCursor(mode=1))
         keyboard.add_hotkey("enter", self.moveEnter())
         keyboard.add_hotkey("esc", self.moveEsc())
 
@@ -166,7 +166,7 @@ class ConsoleMenu():
         os.system(['clear','cls'][os.name == 'nt'])
         
         
-    def moveCursorUP(self) -> None:
+    def moveCursor(self, mode = -1) -> None:
         '''Переместить курсор вверх
 
         Метод перемещает курсор >вверх<, то есть назад по списку,
@@ -175,25 +175,11 @@ class ConsoleMenu():
         Возвращает: None'''
         self.log.debug(f"Запущена функция moveCursorUP")
         number = self.removeCursor()
-        if number-1 < len(self.field_list)*(-1):
-            self.changeCursor(0)
-        else:
-            self.changeCursor(number-1)
-
-
-    def moveCursorDown(self)  -> None:
-        '''Переместить курсор вниз
-
-        Метод перемещает курсор >вниз<, то есть дальше по списку,
-        заменяя значение переменной в таргете (MenuField)
-        Входящиее данные: None
-        Возвращает: None'''
-        self.log.debug(f"Запущена функция moveCursorDown")
-        number = self.removeCursor()
-        if number+1 > len(self.field_list):
-            self.changeCursor(0)
-        else:
-            self.changeCursor(number-1)
+        if number!=None:
+            if number+mode < len(self.field_list)*(mode):
+                self.changeCursor(0)
+            else:
+                self.changeCursor(number+mode)
 
 
     def removeCursor(self) -> int:
@@ -202,12 +188,13 @@ class ConsoleMenu():
         Данный метод вызывается при смене поля.
         Входящиее данные: None
         Возвращает: индекс поля, который сейчас находится в таргете'''
-        
-        self.log.debug(f"Запущена функция remobeCursor")
-        self.target_field.colorChange()
-        index = self.field_list.index(self.target_field)
-        self.log.debug(f"Функция removeCursor возвращает индекс поля, находящегося в таргете: {index}")
-        return index
+        if self.target_field!=None:
+            self.log.debug(f"Запущена функция remobeCursor")
+            self.target_field.colorChange()
+            index = self.field_list.index(self.target_field)
+            self.log.debug(f"Функция removeCursor возвращает индекс поля, находящегося в таргете: {index}")
+            return index
+        return None
 
 
     def changeCursor(self, index:int) -> None:
