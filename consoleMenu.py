@@ -24,6 +24,10 @@ class MenuField():
 
     def __str__(self) -> str:
         return self.name
+    
+
+    def getName(self) -> str:
+        return self.name
 
     
     def settingFuncion(self, func) -> None:
@@ -96,23 +100,39 @@ class ConsoleMenu():
         key_input = keyboard.record("enter")
         if len(key_input)>1:
             last_input = key_input[-2].name
-            if last_input=='up':self.moveCursor(mode=1)
+            if last_input=='up':self.moveCursor(mode=-1)
             elif last_input=='down':self.moveCursor()
             elif last_input=='esc':self.moveEsc()
         else:
             self.moveEnter()
 
 
-    def settingEsc(self, func) -> None:
+    def settingEsc(self, func=None) -> None:
         '''Настройка функции Esc
 
         Клавише esc присваивается передаваемая функция.
+        Если функия не передавалась, то будет использована функция 
+        по умолчанию - escFuncion().
         Она будет вызываться при нажатии клавиши Esc
         Входящиее данные: Функция (funcion), которая будет вызываться
         при нажатии клавиши Esc
         Возвращает: None'''
-        self.log.debug(f"Клавище Esc присвоена функция {func}")
-        self.esc_func = func
+        if func==None:
+            self.esc_func=self.escFuncion
+        else:
+            self.esc_func = func
+            self.log.debug(f"Клавище Esc присвоена функция {func}")
+    
+
+    def escFuncion(self):
+        '''Функция выхода
+
+        Функция выхода из цикла в processStarting.
+        При нажатии клавиши esc будет срабатывать эта функция.
+        Входящиее данные: None
+        Возвращает: None'''
+        self.log.debug(f"Вызвана стандартная функция выхода из меню")
+        self.click_processing = False
 
 
     def moveEsc(self) -> None:
@@ -167,11 +187,11 @@ class ConsoleMenu():
         os.system(['clear','cls'][os.name == 'nt'])
         
         
-    def moveCursor(self, mode = -1) -> None:
+    def moveCursor(self, mode = 1) -> None:
         '''Переместить курсор
 
         Метод перемещает курсор "вверх" или "вниз", то есть назад или вперед по списку
-        в зависимости от знака mode (1 - спускаемся, -1 - поднимаемся), заменяя значение 
+        в зависимости от знака mode (-1 - спускаемся, 1 - поднимаемся), заменяя значение 
         переменной в таргете (MenuField)
         Входящиее данные: None
         Возвращает: None'''
@@ -194,6 +214,7 @@ class ConsoleMenu():
             self.log.debug(f"Запущена функция remobeCursor")
             index = self.field_list.index(self.target_field)
             self.log.debug(f"Функция removeCursor возвращает индекс поля, находящегося в таргете: {index}")
+            self.log.debug(f"Сейчас в таргете находится поле {self.target_field.getName()}")
             return index
         return None
 
@@ -208,6 +229,7 @@ class ConsoleMenu():
         self.log.debug(f"Запущена функция changeCursor (смена таргета) c новым индеком {index}")
         self.log.debug(f"Таргет перешел от поля {self.target_field.name} на поле {self.field_list[index].name}")
         self.target_field = self.field_list[index]
+        self.log.debug(f"В тарегете теперь находится поле {self.target_field.getName()}")
 
 
     def processStarting(self):
