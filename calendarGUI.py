@@ -7,7 +7,3 @@ menu = ConsoleMenu('Календарь')
 
 menu.addField("Поле 1")
 
-
-a = Back.GREEN
-print(type(a))
-
