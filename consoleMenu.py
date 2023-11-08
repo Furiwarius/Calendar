@@ -153,38 +153,6 @@ class ConsoleMenu():
 
         self.log.debug(f"Запущена функция на поле {self.target_field.name}")
         self.target_field.performFunction()
-
-
-    def outputOnDisplay(self) -> None:
-        '''Вывод полей меню на консоль
-
-        Входящиее данные: None
-        Возвращает: None'''
-
-        self.log.debug(f"Запущен вывод меню в консоль")
-        print(self)
-        for field in self.field_list:
-            self.outputFieldOnDisplay(field)
-    
-
-    def outputFieldOnDisplay(self, field:MenuField) -> None:
-        '''Вывод поля на консоль
-
-        Входящиее данные: поле (MenuField), которое нужно вывести в консоль
-        Возвращает: None'''
-        if self.target_field==field:
-            print(Back.GREEN + str(field))
-        else:
-            print(Back.BLACK + str(field))
-
-
-    def cleaning(self) -> None:
-        '''Очистка консоли
-
-        Входящиее данные: None
-        Возвращает: None'''
-        self.log.debug(f"Запущена очистка консоли")
-        os.system(['clear','cls'][os.name == 'nt'])
         
         
     def moveCursor(self, mode = 1) -> None:
@@ -227,9 +195,41 @@ class ConsoleMenu():
         Входящиее данные: индекс нового таргета (int)
         Возвращает: None'''
         self.log.debug(f"Запущена функция changeCursor (смена таргета) c новым индеком {index}")
-        self.log.debug(f"Таргет перешел от поля {self.target_field.name} на поле {self.field_list[index].name}")
+        self.log.debug(f"Таргет перешел от поля - {self.target_field.getName} на поле  - {self.field_list[index].getName}")
         self.target_field = self.field_list[index]
-        self.log.debug(f"В тарегете теперь находится поле {self.target_field.getName()}")
+        self.log.debug(f"В тарегете теперь находится поле: {self.target_field.getName()}")
+
+
+    def outputOnDisplay(self) -> None:
+        '''Вывод полей меню на консоль
+
+        Входящиее данные: None
+        Возвращает: None'''
+
+        self.log.debug(f"Запущен вывод меню в консоль")
+        print(self)
+        for field in self.field_list:
+            self.outputFieldOnDisplay(field)
+    
+
+    def outputFieldOnDisplay(self, field:MenuField) -> None:
+        '''Вывод поля на консоль
+
+        Входящиее данные: поле (MenuField), которое нужно вывести в консоль
+        Возвращает: None'''
+        if self.target_field==field:
+            print(Back.GREEN + str(field))
+        else:
+            print(Back.BLACK + str(field))
+
+
+    def cleaning(self) -> None:
+        '''Очистка консоли
+
+        Входящиее данные: None
+        Возвращает: None'''
+        self.log.debug(f"Запущена очистка консоли")
+        os.system(['clear','cls'][os.name == 'nt'])
 
 
     def processStarting(self):
