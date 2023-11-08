@@ -18,64 +18,12 @@ class MenuField():
         которое будет выводится на экран при визуализации меню'''
         
         self.name = name
-        
-        # Текущий цвет фона для данного поля меню
-        self.back_color = self.setBackColor()
-        # Цвет поля при для смены цвета фона
-        self.colorСhoice = self.setColorChoise()
 
         self.push_func = None
    
 
-    def setBackColor(self, new_color = Back.RESET) -> None:
-        '''Метод настройки основного цвета поля меню
-        
-        Этот цвет поля используется, если поле не находится в таргете меню
-        Входящие данные: цвет фона (Back. ....)'''
-        self.back_color = new_color
-    
-
-    def setColorChoise(self, new_color = Back.GREEN) -> None:
-        '''Метод настройки второстепенного цвета поля меню
-        
-        Этот цвет поля используется, если поле находится в таргете меню
-        Входящие данные: цвет фона (Back. ....)'''
-        self.colorChoice = new_color
-
-    
-    def getBackColor(self) -> None:
-        '''Получить основной цвет фона поля меню
-        
-        Входящие данные: None
-        Возвращаемое значение: цвет фона (Back. ....)'''
-        return self.back_color
-
-
-    def getColorChoise(self) -> None:
-        '''Получить второстепенный цвет фона поля меню
-        
-        Входящие данные: None
-        Возвращаемое значение: цвет фона (Back. ....)'''
-        return self.colorChoice
-
-    
-    def colorChange(self) -> None:
-        '''Метод меняющий цвет поля меню
-
-        Меняет обычный цвет поля на цвет, при котором 
-        поле находится в таргете и наоборот
-        Входящие данные: None'''
-        change = self.getBackColor()
-        self.setBackColor(self.getColorChoise())
-        self.setColorChoise(change)
-
-
-    def backgroundColorSetting(self, new_color) -> None:
-        '''Метод для настройки цвета фона
-
-        Входящие данные: новый цвет фона'''
-        
-        self.colorСhoice = new_color
+    def __str__(self) -> str:
+        return self.name
 
     
     def settingFuncion(self, func) -> None:
@@ -117,6 +65,10 @@ class ConsoleMenu():
         self.log.info(f"Создание эземпляра класса ConsoleMenu")
 
 
+    def __str__(self) -> str:
+        return self.menu_name
+
+
     def addField(self, name_field:str) -> MenuField:
         '''Метод создающий новое поле меню
 
@@ -125,7 +77,6 @@ class ConsoleMenu():
         
         new_field = MenuField(name_field)
         if len(self.field_list)==0:
-            new_field.colorChange()
             self.target_field = new_field
         self.field_list.append(new_field)
         
@@ -191,10 +142,21 @@ class ConsoleMenu():
         Возвращает: None'''
 
         self.log.debug(f"Запущен вывод меню в консоль")
-        print(self.menu_name)
+        print(self)
         for field in self.field_list:
-            print(field.getBackColor() + field.name)
+            self.outputFieldOnDisplay(field)
     
+
+    def outputFieldOnDisplay(self, field:MenuField) -> None:
+        '''Вывод поля на консоль
+
+        Входящиее данные: поле (MenuField), которое нужно вывести в консоль
+        Возвращает: None'''
+        if self.target_field==field:
+            print(Back.GREEN + str(field))
+        else:
+            print(Back.BLACK + str(field))
+
 
     def cleaning(self) -> None:
         '''Очистка консоли
@@ -230,7 +192,6 @@ class ConsoleMenu():
         Возвращает: индекс поля, который сейчас находится в таргете'''
         if self.target_field!=None:
             self.log.debug(f"Запущена функция remobeCursor")
-            self.target_field.colorChange()
             index = self.field_list.index(self.target_field)
             self.log.debug(f"Функция removeCursor возвращает индекс поля, находящегося в таргете: {index}")
             return index
@@ -247,7 +208,6 @@ class ConsoleMenu():
         self.log.debug(f"Запущена функция changeCursor (смена таргета) c новым индеком {index}")
         self.log.debug(f"Таргет перешел от поля {self.target_field.name} на поле {self.field_list[index].name}")
         self.target_field = self.field_list[index]
-        self.target_field.colorChange()
 
 
     def processStarting(self):
