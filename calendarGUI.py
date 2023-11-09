@@ -1,7 +1,4 @@
-import time
-from consoleMenu import ConsoleMenu, MenuField
-import keyboard
-from colorama import Fore, Back, Style
+from consoleMenu import ConsoleMenu
 
 menu = ConsoleMenu('Календарь')
 
