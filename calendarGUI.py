@@ -1,17 +1,43 @@
-import time
-from consoleMenu import ConsoleMenu, MenuField
-import keyboard
-from colorama import Fore, Back, Style
+import calendar
+from datetime import datetime
 
-menu = ConsoleMenu('Календарь')
 
-menu.addField("Поле 0")
-menu.addField("Поле 1")
-menu.addField("Поле 2")
+class calendarConsole():
 
-menu.settingEsc()
+    def __init__(self) -> None:
+        
+        now_date = datetime.now()
 
-menu.processStarting()
+        self.year = now_date.year
+        self.month = now_date.month
+
+        self.column_width = 3
+        self.column_height = 2
+
+        self.calr = calendar.TextCalendar(firstweekday=0)
+
+
+    def setYear(self, new_year:int) -> None:
+        self.year = new_year
+
+
+    def setMonth(self, new_month:int) -> None:
+        self.month = new_month
+
+
+    def setWidth(self, new_width:int) -> None:
+        self.column_width = new_width
+
+
+    def setHeight(self, new_heigth:int) -> None:
+        self.column_height = new_height
+
+
+    def outputConsole(self) -> None:
+        
+        calr_output = self.calr.formatmonth(self.year, self.month,
+                                       self.column_width, self.column_height)
+        print(calr_output)
 
 
 
