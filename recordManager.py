@@ -6,7 +6,8 @@ class RecordManager():
 
     По сути является валидатором запросов к бд,
     который проверяет правильность отправляемых данных.
-    Все взаимодействия с бд происходят с помощью
+    Все взаимодействия с бд происходят с помощью класса
+    CalendarDatabase.
     '''
 
     def __init__(self, data_base: CalendarDatabase) -> None:
@@ -16,9 +17,19 @@ class RecordManager():
         взаимодействовать менеджер запросов
         '''
         self.__data_base__ = data_base
-        
+
+    
+    def getDateBase(self):
+        '''Метод получения бд привязанной к данному менеджеру
+
+        Входящие данные: None
+        Возвращаемое значение: бд календаря (CalendarDatabase)
+        '''
+        return self.__data_base__
+            
 
     def __inputDate(self) -> datetime.datetime:
+        # Ввод даты
         '''Метод ввода даты 
 
         Метод запускает циклы для ввода чисел,
@@ -35,6 +46,7 @@ class RecordManager():
 
 
     def __dateAcquisitionCycle(self, input_massage:str, date_mode:int) ->int:
+        # Ввод чисел
         '''Метод собирающий вводимые данные 
 
         Метод запрашивает данные у пользователя, и проверяет
@@ -57,6 +69,7 @@ class RecordManager():
         
 
     def __checkInputDate(self, number: str) -> bool:
+        # Проверка числа
         '''Метод проверки чисел 
 
         Выполняет проверку строки на пустоту, также на то,
@@ -72,6 +85,7 @@ class RecordManager():
 
 
     def __checkingCorrectness(self, date:str, mode:int) -> bool:
+        # Проверка даты
         '''Метод проверки даты 
 
         Выполняет проверку строки в зависимости от
@@ -89,7 +103,8 @@ class RecordManager():
         return False
 
 
-    def __inputrecord(self) -> str:
+    def __inputRecord(self) -> str:
+        # Ввод записи
         '''Метод ввода записи 
 
         Метод запускает цикл для ввода записи.
@@ -106,19 +121,79 @@ class RecordManager():
             if new_input!=None and new_input.isspace()==False:
                 flag=False
         return new_input.lstrip().rstrip()
+    
+
+    def searchDate(self) -> int:
+        # найти дату
+        '''Найти запись 
+
+        Запрашивает у пользователя дату записи,
+        после чего ищет ее в бд. Возвращает id
+        записи, либо None если она отсутствует.
+        Входящие данные: None
+        Возвращает: id даты (int) или None'''
+        search = self.__inputDate()
+        result = self.getDateBase().dateSearch(search)
+        return result
 
 
-    def searchDate(self, date:datetime) -> None:
-        pass
+    def getRecord(self) -> tuple(datetime.datitime, list(str)):
+        # Получить запись
+        '''Получить запись
 
-
-    def saveRecord(self) -> None:
-        pass
+        Запрашивает у пользователя дату записи,
+        потом ищеи в бд записи связанные с
+        этой датой.
+        Входящие данные: None
+        Возвращает: кортеж(tuple) из даты и записи'''
+        search_date = self.__inputDate()
+        id_records = self.getDateBase().searchIdRecords(search_date)
+        records_list = self.getDateBase().searchRecords(id_records)
+        return search_date, record_list
 
 
     def createRecord(self) -> None:
-        pass
+        # СОздать запись
+        '''Создать запись
+
+        Запрашивает у пользователя дату для записи,
+        потом запрашиват сообщение, которое нужно
+        сохранить и созраняет в бд.
+        Входящие данные: None
+        Возвращает: None'''
+        new_date = self.__inputDate()
+        new_record = self.__inputRecord()
+        self.getDateBase().makeEntry(new_date, new_record)
 
 
     def changeRecord(self) -> None:
-        pass
+        # Изменить запись
+        '''Изменить запись
+
+        Запрашивает у пользователя дату записи,
+        после чего ищет ее в бд. Еси находит,
+        то запрашивает у пользователя новую запись,
+        и изменяет ее.
+        Входящие данные: None
+        Возвращает: None'''
+        id_date = self.searchDate()
+        if id_date!=None:
+            record_id = self.getDateBase().searchIdRecords(id_date)[0]
+            new_content = self.__inputRecord()
+            self.getDateBase().changeEntry(record_id, new_content)
+            
+
+
+    def deleteRecord(self) -> None:
+        # Удалить запись
+        '''Удалить запись
+
+        Запрашивает у пользователя дату записи,
+        после чего ищет ее в бд. Если нашел,
+        то удаляет
+        Входящие данные: None
+        Возвращает: None'''
+        id_date = self.searchDate()
+        if id_date!=None:
+            record_id = self.getDateBase().searchIdRecords(id_date)[0]
+            self.getDateBase().deleteRecord(record_id)
