@@ -63,12 +63,12 @@ class RecordManager():
         response_collection_process = True
         while response_collection_process:
             new_input = input(input_massage)
-            if self.__checkInputDate(new_input) and self.__checkingCorrectness(new_inpur, date_mode):
+            if self.__checkInputDate(new_input) and self.__checkingCorrectness(new_input, date_mode):
                 response_collection_process = False
         return int(new_input)
         
 
-    def __checkInputDate(self, number: str) -> bool:
+    def __checkInputDate(self, new_input: str) -> bool:
         # Проверка числа
         '''Метод проверки чисел 
 
@@ -149,7 +149,7 @@ class RecordManager():
         search_date = self.__inputDate()
         id_records = self.getDateBase().searchIdRecords(search_date)
         records_list = self.getDateBase().searchRecords(id_records)
-        return search_date, record_list
+        return search_date, records_list
 
 
     def createRecord(self) -> None:
